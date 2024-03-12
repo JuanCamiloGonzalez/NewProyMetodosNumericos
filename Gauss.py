@@ -1,3 +1,4 @@
+import tkinter as tk
 import numpy as np
 
 def gauss(A, b):
@@ -40,8 +41,18 @@ for i in range(n):
     A[i] = list(map(float, input().split()))
 b = np.array(list(map(float, input("Ingrese los términos independientes b separados por espacios: ").split())))
 
+# Crear la ventana y el widget para mostrar la solución
+window = tk.Tk()
+solution_label = tk.Label(window, text="Solución del sistema:")
+solution_label.grid(row=0, column=0)
+solution_entry = tk.Entry(window, width=50)
+solution_entry.grid(row=0, column=1)
+
 # Resolver el sistema utilizando el método de eliminación de Gauss
 solucion = gauss(A, b)
 
-# Imprimir la solución
-print("La solución del sistema es:", solucion)
+# Mostrar la solución en el widget
+solution_entry.insert(0, str(solucion))
+
+# Iniciar el bucle de eventos de la ventana
+window.mainloop()

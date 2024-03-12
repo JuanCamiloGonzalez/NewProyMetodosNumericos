@@ -1,3 +1,4 @@
+import tkinter as tk
 import numpy as np
 
 def jacobi(A, b, x0, tol=1e-6, max_iter=1000):
@@ -37,9 +38,23 @@ for i in range(n):
 b = np.array(list(map(float, input("Ingrese los términos independientes b separados por espacios: ").split())))
 x0 = np.array(list(map(float, input("Ingrese la estimación inicial x0 separada por espacios: ").split())))
 
+# Crear la ventana y los widgets para mostrar los resultados
+window = tk.Tk()
+solution_label = tk.Label(window, text="Solución encontrada:")
+solution_label.grid(row=0, column=0)
+solution_entry = tk.Entry(window, width=50)
+solution_entry.grid(row=0, column=1)
+iterations_label = tk.Label(window, text="Número de iteraciones:")
+iterations_label.grid(row=1, column=0)
+iterations_entry = tk.Entry(window, width=10)
+iterations_entry.grid(row=1, column=1)
+
 # Resolver el sistema utilizando el método de Jacobi
 solucion, num_iteraciones = jacobi(A, b, x0)
 
-# Imprimir la solución y el número de iteraciones realizadas
-print("Solución encontrada:", solucion)
-print("Número de iteraciones:", num_iteraciones)
+# Mostrar la solución y el número de iteraciones realizadas en los widgets
+solution_entry.insert(0, str(solucion))
+iterations_entry.insert(0, str(num_iteraciones))
+
+# Iniciar el bucle de eventos de la ventana
+window.mainloop()

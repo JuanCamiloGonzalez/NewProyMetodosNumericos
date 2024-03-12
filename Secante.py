@@ -1,76 +1,33 @@
-# Método de la secante
-# Ejemplo 1 (Burden ejemplo 1 p.51/pdf.61)
-
-import numpy as np
-
-def secante_tabla(fx,xa,tolera):
-    dx = 4*tolera
-    xb = xa + dx
-    tramo = dx
-    tabla = []
-    while (tramo>=tolera):
-        fa = fx(xa)
-        fb = fx(xb)
-        xc = xa - fa*(xb-xa)/(fb-fa)
-        tramo = abs(xc-xa)
-        
-        tabla.append([xa,xb,xc,tramo])
-        xb = xa
-        xa = xc
-
-    tabla = np.array(tabla)
-    return(tabla)
-
-# PROGRAMA ---------------------
 # INGRESO
-fx = lambda x: x**3 + 4*x**2 - 10
-
-a  = 1
-b  = 2
-xa = 1.5
-tolera = 0.001
-tramos = 100
+fx  = lambda x: x**3 + 2*(x**2) + 10*x - 20
+dfx = lambda x: 3*(x**2) + 4*x +10
+x0 = float(input("Ingrese el valor inicial: "))
+error = 0.001
 
 # PROCEDIMIENTO
-tabla = secante_tabla(fx,xa,tolera)
+tabla = []
+deltax = 0.002
+xi = x0
+while (error<deltax):
+    xnuevo = xi - fx(xi)/dfx(xi)
+    deltax = abs(xnuevo-xi)
+    p1=dfx(xi)**2-fx(xi)*((6*xi)+4)
+    gx= abs((p1/dfx(xi)**2)-1)
+    tabla.append([xi,xnuevo, deltax ,gx])
+    xi = xnuevo
+
+# convierte la lista a un arreglo.
+tabla = np.array(tabla)
 n = len(tabla)
-raiz = tabla[n-1,2]
+fi = fx(np.linspace(-10,10,1000))
 
 # SALIDA
-np.set_printoptions(precision=4)
-print('[xa ,\t xb , \t xc , \t tramo]')
-for i in range(0,n,1):
-    print(tabla[i])
-print('raiz en: ', raiz)
+print(f"Raíz encontrada: {xi:.4f}\nError: {deltax:.4e}")
 
-
-# GRAFICA
-import matplotlib.pyplot as plt
-
-# Calcula los puntos a graficar
-xi = np.linspace(a,b,tramos+1)
-fi = fx(xi)
-dx = (b-xa)/2
-pendiente = (fx(xa+dx)-fx(xa))/(xa+dx-xa)
-b0 = fx(xa) - pendiente*xa
-tangentei = pendiente*xi+b0
-
-fxa = fx(xa)
-xb = xa + dx
-fxb = fx(xb)
-
-plt.plot(xi,fi, label='f(x)')
-
-plt.plot(xi,tangentei, label='secante')
-plt.plot(xa,fx(xa),'go', label='xa')
-plt.plot(xa+dx,fx(xa+dx),'ro', label='xb')
-plt.plot((-b0/pendiente),0,'yo', label='xc')
-
-plt.plot([xa,xa],[0,fxa],'m')
-plt.plot([xb,xb],[0,fxb],'m')
-
-plt.axhline(0, color='k')
-plt.title('Método de la Secante')
-plt.legend()
+# Mostrar la gráfica
+plt.plot(np.linspace(-10,10,1000),fi,'b')
+plt.plot(xi,0,'ro')
+plt.axvline(x=0, ymin=-10, ymax=10)
+plt.axhline(y=0, xmin=-10, xmax=10)
 plt.grid()
 plt.show()
